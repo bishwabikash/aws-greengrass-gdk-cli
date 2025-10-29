@@ -20,3 +20,9 @@ def list(d_args):
     from gdk.commands.component.ListCommand import ListCommand
 
     ListCommand(d_args).run()
+
+
+def deploy(d_args):
+    from gdk.commands.component.DeployCommand import DeployCommand
+
+    DeployCommand(d_args).run()

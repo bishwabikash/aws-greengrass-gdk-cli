@@ -138,6 +138,45 @@
                             "required": [
                                 "bucket"
                             ]
+                        },
+                        "deploy": {
+                            "type": "object",
+                            "description": "Configuration used with the deploy command of the cli.",
+                            "properties": {
+                                "target_arn": {
+                                    "description": "ARN of the target device or device group for deployment.",
+                                    "type": "string"
+                                },
+                                "region": {
+                                    "description": "AWS regions supported by AWS IoT Greengrassv2.",
+                                    "type": "string"
+                                },
+                                "deployment_name": {
+                                    "description": "Name for the deployment. If not provided, a name will be generated automatically.",
+                                    "type": "string"
+                                },
+                                "options": {
+                                    "type": "object",
+                                    "description": "configuration options used during deployment creation",
+                                    "properties": {
+                                        "deployment_policies": {
+                                            "type": "object",
+                                            "description": "Deployment policies for component deployment behavior."
+                                        },
+                                        "iot_job_configuration": {
+                                            "type": "object",
+                                            "description": "IoT job configuration for the deployment."
+                                        },
+                                        "component_update_policy": {
+                                            "type": "object",
+                                            "description": "Component update policy configuration."
+                                        }
+                                    }
+                                }
+                            },
+                            "required": [
+                                "target_arn"
+                            ]
                         }
                     },
                     "required": [

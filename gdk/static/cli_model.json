@@ -122,9 +122,42 @@
                                 "repository"
                             ]
                         ]
+                    },
+                    "deploy": {
+                        "help": "Deploy a GreengrassV2 component to target devices or device groups.",
+                        "arguments": {
+                            "target_arn": {
+                                "name": [
+                                    "-t",
+                                    "--target-arn"
+                                ],
+                                "help": "ARN of the target device or device group for deployment. This argument overrides the target ARN provided in the gdk configuration."
+                            },
+                            "deployment_name": {
+                                "name": [
+                                    "-n",
+                                    "--deployment-name"
+                                ],
+                                "help": "Name for the deployment. If not provided, a name will be generated automatically."
+                            },
+                            "region": {
+                                "name": [
+                                    "-r",
+                                    "--region"
+                                ],
+                                "help": "Name of the AWS region to use during deployment. This argument overrides the region name provided in the gdk configuration."
+                            },
+                            "options": {
+                                "name": [
+                                    "-o",
+                                    "--options"
+                                ],
+                                "help": "Extra configuration options used during deployment. This argument needs to be a valid json string or file path to a JSON file containing the deployment options. This argument overrides the options provided in the gdk configuration."
+                            }
+                        }
                     }
                 },
-                "help": "Initialize, build and publish GreengrassV2 components using this command."
+                "help": "Initialize, build, publish and deploy GreengrassV2 components using this command."
             },
             "test-e2e": {
                 "sub-commands": {

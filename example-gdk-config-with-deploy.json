@@ -1,0 +1,59 @@
+{
+    "component": {
+        "com.example.PythonHelloWorld": {
+            "author": "J. Doe",
+            "version": "NEXT_PATCH",
+            "build": {
+                "build_system": "zip"
+            },
+            "publish": {
+                "bucket": "my-s3-bucket",
+                "region": "us-east-1"
+            },
+            "deploy": {
+                "target_arn": "arn:aws:iot:us-east-1:123456789012:thing/MyGreengrassDevice",
+                "region": "us-east-1",
+                "deployment_name": "MyComponent-Deployment",
+                "options": {
+                    "deployment_policies": {
+                        "failureHandlingPolicy": "ROLLBACK",
+                        "componentUpdatePolicy": {
+                            "timeoutInSeconds": 60,
+                            "action": "NOTIFY_COMPONENTS"
+                        },
+                        "configurationValidationPolicy": {
+                            "timeoutInSeconds": 60
+                        }
+                    },
+                    "iot_job_configuration": {
+                        "jobExecutionsRolloutConfig": {
+                            "exponentialRate": {
+                                "baseRatePerMinute": 10,
+                                "incrementFactor": 2,
+                                "rateIncreaseCriteria": {
+                                    "numberOfNotifiedThings": 10,
+                                    "numberOfSucceededThings": 5
+                                }
+                            },
+                            "maximumPerMinute": 1000
+                        },
+                        "abortConfig": {
+                            "criteriaList": [
+                                {
+                                    "failureType": "FAILED",
+                                    "action": "CANCEL",
+                                    "thresholdPercentage": 50,
+                                    "minNumberOfExecutedThings": 10
+                                }
+                            ]
+                        },
+                        "timeoutConfig": {
+                            "inProgressTimeoutInMinutes": 60
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "gdk_version": "1.0.0"
+}

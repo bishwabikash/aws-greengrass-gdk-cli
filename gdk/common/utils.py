@@ -1,7 +1,9 @@
+import json
 import logging
 import shutil
 from pathlib import Path
 
+import boto3
 import requests
 from packaging.version import Version
 
@@ -154,6 +156,59 @@ def is_recipe_size_valid(file_path):
 
 def convertToLowercase(value):
     return str.lower(value)
+
+
+def get_account_id():
+    """
+    Gets the AWS account ID from the current AWS credentials.
+    
+    Returns:
+        str: AWS account ID
+        
+    Raises:
+        Exception: If unable to get account ID from AWS credentials
+    """
+    try:
+        sts_client = boto3.client('sts')
+        response = sts_client.get_caller_identity()
+        return response['Account']
+    except Exception as e:
+        logging.error("Failed to get AWS account ID. Please ensure AWS credentials are configured.")
+        raise
+
+
+def get_json_from_file_or_string(input_value):
+    """
+    Parses JSON from either a file path or a JSON string.
+    
+    Args:
+        input_value: Either a file path or a JSON string
+        
+    Returns:
+        dict: Parsed JSON object
+        
+    Raises:
+        Exception: If unable to parse JSON from input
+    """
+    if not input_value:
+        return {}
+        
+    # Try to parse as JSON string first
+    try:
+        return json.loads(input_value)
+    except json.JSONDecodeError:
+        pass
+    
+    # Try to read as file path
+    try:
+        file_path = Path(input_value).resolve()
+        if file_path.is_file():
+            with open(file_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+    except Exception:
+        pass
+    
+    raise Exception(f"Unable to parse JSON from input: {input_value}")
 
 
 error_line = "\n=============================== ERROR ===============================\n"

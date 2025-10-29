@@ -47,3 +47,71 @@ class Greengrassv2Client:
             except Exception:
                 logging.error("Failed to create a private version of the component using the recipe at '%s'.", file_path)
                 raise
+
+    def create_deployment(self, target_arn, components, deployment_name=None, deployment_policies=None, 
+                         iot_job_configuration=None, component_update_policy=None) -> dict:
+        """
+        Creates a deployment for GreengrassV2 components to target devices or device groups.
+
+        Args:
+            target_arn: ARN of the target device or device group
+            components: Dictionary of components to deploy with their configurations
+            deployment_name: Optional name for the deployment
+            deployment_policies: Optional deployment policies
+            iot_job_configuration: Optional IoT job configuration
+            component_update_policy: Optional component update policy
+
+        Returns:
+            Dictionary containing deployment response
+
+        Raises an exception if the deployment creation fails.
+        """
+        try:
+            deployment_request = {
+                "targetArn": target_arn,
+                "components": components
+            }
+            
+            if deployment_name:
+                deployment_request["deploymentName"] = deployment_name
+            
+            if deployment_policies:
+                deployment_request["deploymentPolicies"] = deployment_policies
+            
+            if iot_job_configuration:
+                deployment_request["iotJobConfiguration"] = iot_job_configuration
+                
+            if component_update_policy:
+                deployment_request["componentUpdatePolicy"] = component_update_policy
+
+            response = self.client.create_deployment(**deployment_request)
+            
+            logging.info(
+                "Created deployment '%s' with ID '%s' for target '%s'.",
+                response.get("deploymentName", "Unnamed"),
+                response.get("deploymentId"),
+                target_arn
+            )
+            
+            return response
+            
+        except Exception:
+            logging.error("Failed to create deployment for target '%s'.", target_arn)
+            raise
+
+    def get_deployment_status(self, deployment_id) -> dict:
+        """
+        Gets the status of a deployment.
+
+        Args:
+            deployment_id: ID of the deployment to check
+
+        Returns:
+            Dictionary containing deployment status information
+        """
+        try:
+            response = self.client.get_deployment(deploymentId=deployment_id)
+            return response
+        except Exception:
+            logging.error("Failed to get deployment status for deployment ID '%s'.", deployment_id)
+            raise

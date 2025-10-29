@@ -12,3 +12,5 @@
 *.vscode
 venv/
 coverage.xml
+.github/
+.kiro/
